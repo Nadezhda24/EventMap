@@ -31,15 +31,12 @@ class MapFragment : Fragment() {
 
      private var mapController: IMapController? = null
      private var marker: Marker? = null
-    private val data =  HttpHolder()
-    private val mainScope = MainScope()
-
-    var EventList: ArrayList<Event> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val activity: MainActivity = activity as MainActivity
         binding = FragmentMapBinding.inflate(layoutInflater)
         //Подключение карты
         binding.map.setMultiTouchControls(true)
@@ -48,42 +45,12 @@ class MapFragment : Fragment() {
         mapController?.setCenter(GeoPoint(lat, lon))
         mapController?.setZoom(14)
         Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
-
-        EventList.add(Event(1, "Новое событие",
-            "21pgmipait@gmail.com",
-            Category("ДТП", "#FFC618", "FFFFFF"),
-            "12.12.2022 13:00",
-            Point(52.9685433, 36.0692477),
-            "",
-            "Эксплуатация ИТ в границах АСУП показала потребность такого ПО посредствам которого оказалось бы возможным не только автоматизация производственных процессов, но и автоматизации управленческих процессов поддержания соответствия между целями предприятия его потенциальными возможностями и ситуацией на рынке на длительный период. Такая способность АСУП фактически открывает возможность формирования важнейшего конкурентного преимущества АСУП - оказание требуемого влияния на структуру рынка.\n"))
-
-
-        //получение данных
-        mainScope.launch {
-            kotlin.runCatching {
-                data.getReverseData(EventList[0].point)
-            }.onSuccess {
-                val jsonObj = JSONTokener(it).nextValue() as JSONObject
-                try {
-                    val address = jsonObj.getJSONObject("address")
-                    val road = address.getString("road")
-                    EventList[0].address = road
-                }catch (e:Exception){
-                    val display_name = jsonObj.getString("display_name")
-                    EventList[0].address = display_name
-                }
-                setUpMyMarker(EventList[0].point.lat,EventList[0].point.lon)
-
-            }.onFailure {
-                println("Ошибка: " + it.localizedMessage)
-            }
-        }
+        setUpMyMarker(activity.EventList[0])
         return binding.root
 
     }
 
-
-      private fun setUpMyMarker(lat: Double, lon: Double){
+      private fun setUpMyMarker(event: Event){
           marker = Marker(binding.map)
           marker?.icon = resources.getDrawable(R.drawable.marker)
           binding.map.overlays?.add(marker)
@@ -98,12 +65,12 @@ class MapFragment : Fragment() {
               val date: TextView = cardEvent.findViewById(R.id.Date)
               val address: TextView = cardEvent.findViewById(R.id.Address)
 
-              title.text = EventList[0].title
-              author.text = EventList[0].author
-              category.text = EventList[0].category.name
-              date.text = EventList[0].date
-              address.text = EventList[0].address
-              description.text = EventList[0].description
+              title.text = event.title
+              author.text = event.author
+              category.text = event.category?.name
+              date.text = event.date
+              address.text = event.address
+              description.text = event.description
 
               binding.containerBottomSheet.addView(cardEvent)
               val bottomSheetBehaviour = BottomSheetBehavior.from(binding.containerBottomSheet)

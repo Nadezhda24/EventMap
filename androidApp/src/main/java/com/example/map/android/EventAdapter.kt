@@ -28,7 +28,7 @@ class EventAdapter(private val data: List<Event>):
         holder.description.visibility = View.GONE
         holder.title.text = data[position].title
         holder.author.text = data[position].author
-        holder.category.text = data[position].category.name
+        holder.category.text = data[position].category?.name
         holder.date.text = data[position].date
         holder.address.text = data[position].address
     }

@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     kotlin("android")
+    id ("kotlin-android-extensions")
 }
 
 android {
@@ -19,6 +20,10 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+
+    androidExtensions {
+        var experimental = true
     }
 
 
