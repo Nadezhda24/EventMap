@@ -2,8 +2,14 @@ package com.example.map.android
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.map.android.Models.Point
+import com.example.map.android.Models.Category
 import com.example.map.android.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import org.json.JSONTokener
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,7 +36,4 @@ class MainActivity : AppCompatActivity() {
         })
 
     }
-
-
-
 }

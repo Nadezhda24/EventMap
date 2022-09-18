@@ -23,6 +23,9 @@ android {
 
 
 }
+val ktorVersion = "1.4.0"
+val coroutinesVersion = "1.3.9-native-mt"
+
 
 dependencies {
     implementation(project(":shared"))
@@ -31,4 +34,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation ("org.osmdroid:osmdroid-android:6.1.11")
+    implementation("io.ktor:ktor-client-android:$ktorVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+
 }
