@@ -7,19 +7,25 @@ import io.ktor.client.statement.*
 
 
 class HttpHolder {
-
-    private val httpClient =  HttpClient()
+    private val httpClient = HttpClient()
     val url: String = "https://nominatim.openstreetmap.org/"
+    val localhost: String = "http://danbla6h.beget.tech/api/"
 
     //по наименованию возвращает координаты
     suspend fun getSearchData(search: String): String{
         val response: HttpResponse = httpClient.get(url+"search/?format=json&q=${search}")
-        return response.readText()
+        return response.bodyAsText()
     }
 
     //по координатам возвращает наименование
     suspend fun getReverseData(address: Point): String{
         val response: HttpResponse = httpClient.get(url+"reverse?format=json&lat=${address.lat}&lon=${address.lon}")
-        return response.readText()
+        return response.bodyAsText()
     }
+
+    suspend fun getEvents(): String{
+        val response = httpClient.get("http://danbla6h.beget.tech/api/event")
+        return response.bodyAsText(Charsets.UTF_8)
+    }
+
 }

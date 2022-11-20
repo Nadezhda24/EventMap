@@ -4,11 +4,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.example.map.android.Models.Point
 import com.example.map.android.Models.Category
+import com.example.map.android.Models.User
 
 data class Event (
     var id: Int = -1,
     var title: String? = "",
-    var author: String? = "",
+    var image: String? = "",
+    var author: User? = User(),
     var category: Category? = Category(),
     var date: String? = "",
     var point: Point? = Point(),
@@ -19,6 +21,7 @@ data class Event (
         parcel.readInt(),
         parcel.readString(),
         parcel.readString(),
+        parcel.readParcelable(User::class.java.classLoader),
         parcel.readParcelable(Category::class.java.classLoader),
         parcel.readString(),
         parcel.readParcelable(Point::class.java.classLoader),
@@ -30,7 +33,8 @@ data class Event (
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeInt(id)
         parcel.writeString(title)
-        parcel.writeString(author)
+        parcel.writeString(image)
+        parcel.writeParcelable(author, flags)
         parcel.writeParcelable(category, flags)
         parcel.writeString(date)
         parcel.writeParcelable(point, flags)

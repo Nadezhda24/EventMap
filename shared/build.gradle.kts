@@ -23,13 +23,24 @@ kotlin {
     }
     
     sourceSets {
-        val commonMain by getting
+        val ktorVersion = "2.1.3"
+        val commonMain  by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
             }
         }
-        val androidMain by getting
+        val androidMain  by getting {
+            dependencies {
+                implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+            }
+        }
         val androidTest by getting
         val iosX64Main by getting
         val iosArm64Main by getting

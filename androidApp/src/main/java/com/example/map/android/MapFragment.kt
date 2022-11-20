@@ -1,5 +1,7 @@
 package com.example.map.android
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +14,7 @@ import com.example.map.android.Models.Category
 import com.example.map.android.Models.Point
 import com.example.map.android.databinding.FragmentMapBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -45,14 +48,21 @@ class MapFragment : Fragment() {
         mapController?.setCenter(GeoPoint(lat, lon))
         mapController?.setZoom(14)
         Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
-        setUpMyMarker(activity.EventList[0])
+        for (i in 0 until activity.EventList.size){
+            println(activity.EventList[i])
+            setUpMyMarker(activity.EventList[i])
+        }
+
+
         return binding.root
 
     }
 
+      @SuppressLint("Range", "UseCompatLoadingForDrawables")
       private fun setUpMyMarker(event: Event){
           marker = Marker(binding.map)
           marker?.icon = resources.getDrawable(R.drawable.marker)
+          marker?.icon?.setTint(Color.parseColor(event.category!!.color))
           binding.map.overlays?.add(marker)
           marker?.setOnMarkerClickListener { marker, mapView ->
               //BottomSheet
@@ -66,11 +76,15 @@ class MapFragment : Fragment() {
               val address: TextView = cardEvent.findViewById(R.id.Address)
 
               title.text = event.title
-              author.text = event.author
+              author.text = event.author?.name
               category.text = event.category?.name
               date.text = event.date
               address.text = event.address
               description.text = event.description
+
+              Picasso.with(context)
+                  .load(event.image)
+                  .into(imageView)
 
               binding.containerBottomSheet.addView(cardEvent)
               val bottomSheetBehaviour = BottomSheetBehavior.from(binding.containerBottomSheet)
@@ -78,7 +92,7 @@ class MapFragment : Fragment() {
 
               return@setOnMarkerClickListener false
           }
-          val point = GeoPoint(lat, lon)
+          val point = GeoPoint(event.point!!.lat, event.point!!.lon)
           marker?.position = point
           mapController?.animateTo(point)
           binding.map.invalidate()

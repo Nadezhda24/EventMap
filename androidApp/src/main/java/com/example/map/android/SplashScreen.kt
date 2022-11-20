@@ -7,8 +7,10 @@ import android.os.Handler
 import android.view.WindowManager
 import com.example.map.android.Models.Category
 import com.example.map.android.Models.Point
+import com.example.map.android.Models.User
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 
@@ -26,42 +28,71 @@ class SplashScreen : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
 
-        EventList.add(Event(1, "Новое событие",
-            "21pgmipait@gmail.com",
-            Category("ДТП", "#FFC618", "FFFFFF"),
-            "12.12.2022 13:00",
-            Point(52.9685433, 36.0692477),
-            "",
-            "Эксплуатация ИТ в границах АСУП показала потребность такого ПО посредствам которого оказалось бы возможным не только автоматизация производственных процессов, но и автоматизации управленческих процессов поддержания соответствия между целями предприятия его потенциальными возможностями и ситуацией на рынке на длительный период. Такая способность АСУП фактически открывает возможность формирования важнейшего конкурентного преимущества АСУП - оказание требуемого влияния на структуру рынка.\n"))
+        mainScope.launch {
+            kotlin.runCatching {
+                data.getEvents()
+            }.onSuccess {
+                println(it)
+                val jsonObj = JSONTokener(it).nextValue() as JSONArray
+                for (i in 0 until jsonObj.length()){
+                    val id = jsonObj.getJSONObject(i).getInt("id")
+                    val title = jsonObj.getJSONObject(i).getString("name")
+                    val image = jsonObj.getJSONObject(i).getString("image")
+                    val author = jsonObj.getJSONObject(i).getJSONObject("user")
+                    val name = author.getString("first_name")
+                    val surname = author.getString("last_name")
+                    val email = author.getString("mail")
+                    val role = author.getInt("role")
+                    val category =  jsonObj.getJSONObject(i).getJSONObject("category")
+                    val category_name = category.getString("name")
+                    val color = category.getJSONObject("color")
+                    val color_name = color.getString("color")
+                    val text_color = color.getString("text")
+                    val date = jsonObj.getJSONObject(i).getString("date")
+                    val point = jsonObj.getJSONObject(i).getJSONObject("address")
+                    val lat = point.getDouble("lat")
+                    val lon = point.getDouble("lon")
+                    val description = jsonObj.getJSONObject(i).getString("description")
+                    var fillAddress = ""
 
+                    mainScope.launch {
+                        kotlin.runCatching {
+                            data.getReverseData(Point(lat, lon))
+                        }.onSuccess {
+                            val json = JSONTokener(it).nextValue() as JSONObject
+                            fillAddress = try {
+                                val address = json.getJSONObject("address")
+                                val road = address.getString("road")
+                                road
+                            }catch (e:Exception){
+                                val display_name = json.getString("display_name")
+                                display_name
+                            }
 
+                            EventList.add( Event(id, title, image, User(email, name, surname, role),
+                                Category(category_name, color_name, text_color), date,
+                                Point(lat, lon), fillAddress, description))
 
-        Handler().postDelayed({
-            //получение данных
-            mainScope.launch {
-                kotlin.runCatching {
-                    data.getReverseData(EventList[0].point!!)
-                }.onSuccess {
-                    val jsonObj = JSONTokener(it).nextValue() as JSONObject
-                    try {
-                        val address = jsonObj.getJSONObject("address")
-                        val road = address.getString("road")
-                        EventList[0].address = road
-                    }catch (e:Exception){
-                        val display_name = jsonObj.getString("display_name")
-                        EventList[0].address = display_name
+                            if (EventList.size == jsonObj.length()){
+                                val intent = Intent(this@SplashScreen, MainActivity::class.java)
+                                intent.putExtra("EventList", EventList)
+                                startActivity(intent)
+                                finish()
+                            }
+
+                        }.onFailure {
+                            println("Ошибка: " + it.localizedMessage)
+                        }
                     }
-                    val intent = Intent(this@SplashScreen, MainActivity::class.java)
-                    intent.putExtra("EventList", EventList)
-                    startActivity(intent)
-                    finish()
-                }.onFailure {
-                    println("Ошибка: " + it.localizedMessage)
                 }
+
+            }.onFailure {
+                println("Ошибка: " + it.localizedMessage)
             }
 
 
-        }, 3000)
+        }
+
 
     }
 }

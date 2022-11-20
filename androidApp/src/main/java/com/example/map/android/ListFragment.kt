@@ -1,5 +1,6 @@
 package com.example.map.android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +26,11 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         val activity: MainActivity =  activity as MainActivity
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = EventAdapter(activity.EventList)
+
+        binding.User.setOnClickListener{
+            val intent = Intent(context, PersonalAccountActivity::class.java)
+            startActivity(intent)
+        }
 
         return  binding.root
     }
