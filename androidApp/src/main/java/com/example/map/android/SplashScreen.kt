@@ -18,6 +18,7 @@ class SplashScreen : AppCompatActivity() {
     private val data =  HttpHolder()
     private val mainScope = MainScope()
     var EventList: ArrayList<Event> = ArrayList()
+    var CategoryList: ArrayList<Category> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +33,6 @@ class SplashScreen : AppCompatActivity() {
             kotlin.runCatching {
                 data.getEvents()
             }.onSuccess {
-                println(it)
                 val jsonObj = JSONTokener(it).nextValue() as JSONArray
                 for (i in 0 until jsonObj.length()){
                     val id = jsonObj.getJSONObject(i).getInt("id")
@@ -44,6 +44,7 @@ class SplashScreen : AppCompatActivity() {
                     val email = author.getString("mail")
                     val role = author.getInt("role")
                     val category =  jsonObj.getJSONObject(i).getJSONObject("category")
+                    val id_category = category.getInt("id")
                     val category_name = category.getString("name")
                     val color = category.getJSONObject("color")
                     val color_name = color.getString("color")
@@ -70,14 +71,35 @@ class SplashScreen : AppCompatActivity() {
                             }
 
                             EventList.add( Event(id, title, image, User(email, name, surname, role),
-                                Category(category_name, color_name, text_color), date,
+                                Category(id_category,category_name, color_name, text_color), date,
                                 Point(lat, lon), fillAddress, description))
 
                             if (EventList.size == jsonObj.length()){
-                                val intent = Intent(this@SplashScreen, MainActivity::class.java)
-                                intent.putExtra("EventList", EventList)
-                                startActivity(intent)
-                                finish()
+
+                                mainScope.launch {
+                                    kotlin.runCatching {
+                                        data.getCategory()
+                                    }.onSuccess {
+                                        val jsonObj = JSONTokener(it).nextValue() as JSONArray
+                                        for (k in 0 until jsonObj.length()){
+                                            val id_category = jsonObj.getJSONObject(k).getInt("id")
+                                            val name_category = jsonObj.getJSONObject(k).getString("name")
+                                            CategoryList.add(Category(id_category,name_category))
+                                        }
+
+                                        val intent = Intent(this@SplashScreen, MainActivity::class.java)
+                                        intent.putExtra("EventList", EventList)
+                                        intent.putExtra("CategoryList", CategoryList)
+                                        startActivity(intent)
+                                        finish()
+
+                                    }.onFailure {
+                                        println("Ошибка: " + it.localizedMessage)
+                                    }
+                                }
+
+
+
                             }
 
                         }.onFailure {

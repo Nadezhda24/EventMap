@@ -49,7 +49,6 @@ class MapFragment : Fragment() {
         mapController?.setZoom(14)
         Configuration.getInstance().userAgentValue = BuildConfig.APPLICATION_ID
         for (i in 0 until activity.EventList.size){
-            println(activity.EventList[i])
             setUpMyMarker(activity.EventList[i])
         }
 

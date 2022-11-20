@@ -15,6 +15,9 @@ import org.json.JSONTokener
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     var EventList: ArrayList<Event> = ArrayList()
+    var CategoryList: ArrayList<Category> =  ArrayList()
+    val data =  HttpHolder()
+    val mainScope = MainScope()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         EventList = intent.extras!!.getParcelableArrayList("EventList")!!
+        CategoryList = intent.extras!!.getParcelableArrayList("CategoryList")!!
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("События"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Карта"))

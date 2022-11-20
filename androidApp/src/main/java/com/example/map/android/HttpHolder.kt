@@ -28,4 +28,14 @@ class HttpHolder {
         return response.bodyAsText(Charsets.UTF_8)
     }
 
+    suspend fun getEvents(id: Int): String{
+        val response = httpClient.get("http://danbla6h.beget.tech/api/event/${id}")
+        return response.bodyAsText(Charsets.UTF_8)
+    }
+
+
+    suspend fun getCategory(): String{
+        val response = httpClient.get("http://danbla6h.beget.tech/api/category")
+        return response.bodyAsText(Charsets.UTF_8)
+    }
 }

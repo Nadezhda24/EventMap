@@ -6,12 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.map.android.Models.Category
 import com.example.map.android.Models.Point
 import com.example.map.android.databinding.FragmentListBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import org.json.JSONTokener
 
@@ -25,12 +27,26 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         binding = FragmentListBinding.inflate(layoutInflater)
         val activity: MainActivity =  activity as MainActivity
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
+
+
         binding.recyclerView.adapter = EventAdapter(activity.EventList)
 
         binding.User.setOnClickListener{
             val intent = Intent(context, PersonalAccountActivity::class.java)
             startActivity(intent)
         }
+
+        binding.Filter.setOnClickListener{
+            val intent = Intent(context, FilterActivity::class.java)
+            intent.putExtra("CategoryList", activity.CategoryList)
+            intent.putExtra("EventList", activity.EventList)
+            startActivity(intent)
+
+        }
+
+
+
+
 
         return  binding.root
     }
