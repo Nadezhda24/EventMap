@@ -4,24 +4,27 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class User(
+    var id: Int? = -1,
     var email: String? = "",
     var name: String? = "",
     var surname: String? = "",
     var role: Int? = 0,
 ): Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readValue(Int::class.java.classLoader) as? Int,
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readInt()
+        parcel.readValue(Int::class.java.classLoader) as? Int
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeValue(id)
         parcel.writeString(email)
         parcel.writeString(name)
         parcel.writeString(surname)
-        parcel.writeInt(role!!)
+        parcel.writeValue(role)
     }
 
     override fun describeContents(): Int {

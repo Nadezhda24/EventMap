@@ -28,11 +28,18 @@ class ListFragment : Fragment(R.layout.fragment_list) {
         val activity: MainActivity =  activity as MainActivity
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
 
+        if (activity.dataUser.id!! > 0){
+            binding.User.visibility = View.GONE
+        }
+
 
         binding.recyclerView.adapter = EventAdapter(activity.EventList)
 
         binding.User.setOnClickListener{
             val intent = Intent(context, PersonalAccountActivity::class.java)
+            intent.putExtra("CategoryList", activity.CategoryList)
+            intent.putExtra("EventList", activity.EventList)
+            intent.putExtra("dataUser", activity.dataUser)
             startActivity(intent)
         }
 
@@ -40,8 +47,24 @@ class ListFragment : Fragment(R.layout.fragment_list) {
             val intent = Intent(context, FilterActivity::class.java)
             intent.putExtra("CategoryList", activity.CategoryList)
             intent.putExtra("EventList", activity.EventList)
+            intent.putExtra("dataUser", activity.dataUser)
             startActivity(intent)
+        }
 
+        binding.AddEvent.setOnClickListener{
+            if (activity.dataUser.id!! > 0){
+                val intent = Intent(context, CreateEventActivity::class.java)
+                intent.putExtra("CategoryList", activity.CategoryList)
+                intent.putExtra("EventList", activity.EventList)
+                intent.putExtra("dataUser", activity.dataUser)
+                startActivity(intent)
+            }else{
+                val intent = Intent(context, PersonalAccountActivity::class.java)
+                intent.putExtra("CategoryList", activity.CategoryList)
+                intent.putExtra("EventList", activity.EventList)
+                intent.putExtra("dataUser", activity.dataUser)
+                startActivity(intent)
+            }
         }
 
 

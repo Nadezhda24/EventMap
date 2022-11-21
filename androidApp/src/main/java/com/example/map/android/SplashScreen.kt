@@ -8,6 +8,7 @@ import android.view.WindowManager
 import com.example.map.android.Models.Category
 import com.example.map.android.Models.Point
 import com.example.map.android.Models.User
+import io.ktor.util.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
@@ -15,11 +16,14 @@ import org.json.JSONObject
 import org.json.JSONTokener
 
 class SplashScreen : AppCompatActivity() {
+    @OptIn(InternalAPI::class)
     private val data =  HttpHolder()
     private val mainScope = MainScope()
     var EventList: ArrayList<Event> = ArrayList()
     var CategoryList: ArrayList<Category> = ArrayList()
+    var dataUser = User()
 
+    @OptIn(InternalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
@@ -39,6 +43,7 @@ class SplashScreen : AppCompatActivity() {
                     val title = jsonObj.getJSONObject(i).getString("name")
                     val image = jsonObj.getJSONObject(i).getString("image")
                     val author = jsonObj.getJSONObject(i).getJSONObject("user")
+                    val authorId = author.getInt("id")
                     val name = author.getString("first_name")
                     val surname = author.getString("last_name")
                     val email = author.getString("mail")
@@ -70,7 +75,7 @@ class SplashScreen : AppCompatActivity() {
                                 display_name
                             }
 
-                            EventList.add( Event(id, title, image, User(email, name, surname, role),
+                            EventList.add( Event(id, title, image, User(authorId, email, name, surname, role),
                                 Category(id_category,category_name, color_name, text_color), date,
                                 Point(lat, lon), fillAddress, description))
 
@@ -90,6 +95,7 @@ class SplashScreen : AppCompatActivity() {
                                         val intent = Intent(this@SplashScreen, MainActivity::class.java)
                                         intent.putExtra("EventList", EventList)
                                         intent.putExtra("CategoryList", CategoryList)
+                                        intent.putExtra("dataUser", dataUser)
                                         startActivity(intent)
                                         finish()
 

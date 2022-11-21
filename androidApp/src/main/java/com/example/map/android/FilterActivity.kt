@@ -10,6 +10,7 @@ import com.example.map.android.Models.Point
 import com.example.map.android.Models.User
 import com.example.map.android.databinding.ActivityFilterBinding
 import com.example.map.android.databinding.ActivityMainBinding
+import io.ktor.util.*
 import kotlinx.android.synthetic.main.activity_filter.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -21,9 +22,12 @@ class FilterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFilterBinding
     var CategoryList: ArrayList<Category> =  ArrayList()
     var EventList: ArrayList<Event> =  ArrayList()
+    var dataUser: User = User()
+    @OptIn(InternalAPI::class)
     private val data =  HttpHolder()
     private val mainScope = MainScope()
 
+    @OptIn(InternalAPI::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFilterBinding.inflate(layoutInflater)
@@ -31,6 +35,8 @@ class FilterActivity : AppCompatActivity() {
 
         CategoryList = intent.extras!!.getParcelableArrayList("CategoryList")!!
         EventList = intent.extras!!.getParcelableArrayList("EventList")!!
+        dataUser = intent.extras!!.getParcelable("dataUser")!!
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = FilterAdapter(CategoryList)
         binding.LoaderView.visibility = android.view.View.GONE
@@ -53,6 +59,7 @@ class FilterActivity : AppCompatActivity() {
                         val title = jsonObj.getJSONObject(i).getString("name")
                         val image = jsonObj.getJSONObject(i).getString("image")
                         val author = jsonObj.getJSONObject(i).getJSONObject("user")
+                        val authorId = author.getInt("id")
                         val name = author.getString("first_name")
                         val surname = author.getString("last_name")
                         val email = author.getString("mail")
@@ -84,7 +91,7 @@ class FilterActivity : AppCompatActivity() {
                                     display_name
                                 }
 
-                                EventList.add( Event(id, title, image, User(email, name, surname, role),
+                                EventList.add( Event(id, title, image, User(authorId,email, name, surname, role),
                                     Category(id_category,category_name, color_name, text_color), date,
                                     Point(lat, lon), fillAddress, description))
 
@@ -93,6 +100,7 @@ class FilterActivity : AppCompatActivity() {
                                     val intent = Intent(this@FilterActivity, MainActivity::class.java)
                                     intent.putExtra("EventList", EventList)
                                     intent.putExtra("CategoryList", CategoryList)
+                                    intent.putExtra("dataUser", dataUser)
                                     startActivity(intent)
                                     finish()
                                 }

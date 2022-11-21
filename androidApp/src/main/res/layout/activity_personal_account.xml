@@ -6,4 +6,118 @@
     android:layout_height="match_parent"
     tools:context=".PersonalAccountActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Authorization">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+            <EditText
+                android:id="@+id/editTextTextEmailAddress"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="180dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/border"
+                android:ems="10"
+                android:hint="your@email.ru"
+                android:inputType="textEmailAddress"
+                android:padding="15dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/editTextTextPassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/border"
+                android:ems="10"
+                android:hint="Пароль"
+                android:inputType="textPassword"
+                android:padding="15dp"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+                app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+
+            <TextView
+                android:id="@+id/ForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Забыли пароль?"
+                android:textColor="@color/colorAccent"
+                android:textColorHighlight="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
+                android:textColorLink="#00669A"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
+                app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
+                app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+
+            <Button
+                android:id="@+id/LogOn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorPrimaryDark"
+                android:text="Войти"
+                android:textAllCaps="false"
+                android:textColor="#FFFCFC"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
+                app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
+                app:layout_constraintTop_toBottomOf="@+id/ForgotPassword" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/LoaderView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/View"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#7C9E9D9D"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

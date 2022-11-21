@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.map.android.Models.Point
 import com.example.map.android.Models.Category
+import com.example.map.android.Models.User
 import com.example.map.android.databinding.ActivityMainBinding
 import com.google.android.material.tabs.TabLayout
+import io.ktor.util.*
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -16,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     var EventList: ArrayList<Event> = ArrayList()
     var CategoryList: ArrayList<Category> =  ArrayList()
+    var dataUser: User = User()
+    @OptIn(InternalAPI::class)
     val data =  HttpHolder()
     val mainScope = MainScope()
 
@@ -26,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         EventList = intent.extras!!.getParcelableArrayList("EventList")!!
         CategoryList = intent.extras!!.getParcelableArrayList("CategoryList")!!
+        dataUser = intent.extras!!.getParcelable("dataUser")!!
+
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("События"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Карта"))
